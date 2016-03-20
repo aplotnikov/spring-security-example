@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 
 @Configuration
 @ComponentScan("org.home.spring.security")
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class ApplicationContext extends GlobalMethodSecurityConfiguration {
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {

@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ApplicationContext.class)
@@ -48,5 +49,20 @@ public class UserDaoTest {
 
         assertThat(userDao.getUsers()).hasSize(sizeBeforeAddingUser + 1)
                                       .contains(user);
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    public void shouldPreAuthorizationAndPostAuthorizationChecksBePassed() {
+        User transformedUser = userDao.transformUser(user);
+
+        assertThat(user).isNotEqualTo(transformedUser);
+    }
+
+    @Test
+    public void shouldAuthenticationCredentialsNotFoundExceptionBeThrownWhenInputParameterDoesNotMatchExpression() {
+        assertThatThrownBy(
+                () -> userDao.transformUser(new User("Li"))
+        ).isInstanceOf(AuthenticationCredentialsNotFoundException.class);
     }
 }
